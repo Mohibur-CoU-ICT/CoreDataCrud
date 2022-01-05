@@ -18,6 +18,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Data for the table
     var persons: [Person]?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,8 +40,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         catch {
-            
+            print("Error in fetchPerson(): " + error.localizedDescription)
         }
+    }
+    
+    
+    func showErrorAlert(_ msg: String) {
+        let alert = UIAlertController(title: msg, message: "", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
     }
     
     
@@ -66,34 +75,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             // Edit name property of person object
             guard let name = alert.textFields?[0].text, !name.isEmpty else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Name", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Name should not be empty")
                 }
                 
                 return
             }
             
             // Edit age property of person object
-            guard let ageString = alert.textFields?[1].text, let age = Int64(ageString), age > 0 else {
+            guard let ageString = alert.textFields?[1].text, let age = Int64(ageString), age > 0 && age <= 100 else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Age", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Age should be between 1-100")
                 }
                 
                 return
             }
             
             // Edit gender property of person object
-            guard let gender = alert.textFields?[2].text, (gender.lowercased()=="male" || gender.lowercased()=="female") else {
+            guard let gender = alert.textFields?[2].text?.lowercased(), (gender=="male" || gender=="female") else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Gender", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Gender should be male or female")
                 }
                 
                 return
@@ -111,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 try self.context.save()
             }
             catch {
-                
+                print("Error in addButtonTapped() : " + error.localizedDescription)
             }
             
             // Re-fetch the data
@@ -136,7 +136,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         if let cell = personTableView.dequeueReusableCell(withIdentifier: "personTableViewCell", for: indexPath) as? PersonTableViewCell {
             let person = self.persons?[indexPath.row]
-            print("\(indexPath.row) -> Name = \(person?.name ?? "none"), Age = \(person?.age ?? 0), Gender = \(person?.gender ?? "none")")
+//            print("\(indexPath.row) -> Name = \(person?.name ?? "none"), Age = \(person?.age ?? 0), Gender = \(person?.gender ?? "none")")
             cell.nameValue?.text = person?.name
             cell.ageValue?.text = String(person!.age)
             cell.genderValue?.text = person?.gender
@@ -148,7 +148,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("You tapped \(indexPath.row) th person")
+//        print("You tapped \(indexPath.row) th person")
         
         // Selected Person
         let selectedPerson = self.persons![indexPath.row]
@@ -175,34 +175,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             // Edit name property of person object
             guard let name = alert.textFields?[0].text, !name.isEmpty else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Name", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Name should not be empty")
                 }
                 
                 return
             }
             
             // Edit age property of person object
-            guard let ageString = alert.textFields?[1].text, let age = Int64(ageString), age > 0 else {
+            guard let ageString = alert.textFields?[1].text, let age = Int64(ageString), age > 0 && age <= 100 else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Age", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Age should be between 1-100")
                 }
                 
                 return
             }
             
             // Edit gender property of person object
-            guard let gender = alert.textFields?[2].text, (gender.lowercased()=="male" || gender.lowercased()=="female") else {
+            guard let gender = alert.textFields?[2].text?.lowercased(), (gender=="male" || gender=="female") else {
                 alert.dismiss(animated: true) {
-                    let alert2 = UIAlertController(title: "Invalid Gender", message: "", preferredStyle: .alert)
-                    let cancelAction2 = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alert2.addAction(cancelAction2)
-                    self.present(alert2, animated: true, completion: nil)
+                    self.showErrorAlert("Gender should be male or female")
                 }
                 
                 return
@@ -217,7 +208,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 try self.context.save()
             }
             catch {
-                
+                print("Error in didSelectRowAt : " + error.localizedDescription)
             }
             
             // Re-fetch the data
@@ -248,7 +239,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 try self.context.save()
             }
             catch {
-                
+                print("Error in deleting person : " + error.localizedDescription)
             }
             
             // Re-fetch the data
