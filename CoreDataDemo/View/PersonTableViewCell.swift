@@ -9,5 +9,7 @@ import Foundation
 import UIKit
 
 class PersonTableViewCell: UITableViewCell {
-    
+    @IBOutlet weak var nameValue: UILabel!
+    @IBOutlet weak var ageValue: UILabel!
+    @IBOutlet weak var genderValue: UILabel!
 }
